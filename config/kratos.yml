@@ -7,6 +7,22 @@ serve:
     base_url: https://pixeleye-kratos.zu.ca/
     cors:
       enabled: true
+      allowed_origins:
+        - https://pixeleye-frontend.zu.ca
+      allowed_methods:
+        - POST
+        - GET
+        - PUT
+        - PATCH
+        - DELETE
+      allowed_headers:
+        - Authorization
+        - Content-Type
+        - X-CSRF-Token
+      exposed_headers:
+        - Content-Type
+        - Set-Cookie
+      allow_credentials: true
   admin:
     base_url: https://pixeleye-kratos-admin.zu.ca/
 
