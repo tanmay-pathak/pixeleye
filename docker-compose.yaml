@@ -5,16 +5,12 @@ services:
     ports:
       - "4436:4436"
       - "4437:4437"
-    networks:
-      - intranet
   minio:
     image: docker.io/bitnami/minio:2024
     ports:
       - "9000:9000"
     volumes:
       - minio-data:/bitnami/minio/data
-    networks:
-      - intranet
     environment:
       - MINIO_ROOT_USER=pixeleye
       - MINIO_ROOT_PASSWORD=CHANGEME
@@ -35,8 +31,6 @@ services:
       - POSTGRES_MULTIPLE_DATABASES=pixeleye,kratos
     ports:
       - "5431:5431"
-    networks:
-      - intranet
   rabbitmq:
     image: rabbitmq:3.13
     restart: unless-stopped
@@ -46,8 +40,6 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-    networks:
-      - intranet
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
   pixeleye-migrate:
@@ -60,8 +52,6 @@ services:
       - DB_PASSWORD=CHANGEME
       - DB_PARAMS=sslmode=disable
     restart: on-failure
-    networks:
-      - intranet
   pixeleye-backend:
     ports:
       - "5001:5000"
@@ -105,8 +95,6 @@ services:
       # - GITHUB_APP_ID= # optional if you want to use the github login
       # - GITHUB_APP_CLIENT_SECRET= # optional if you want to use the github login
       # - GITHUB_APP_PRIVATE_KEY= # optional if you want to use the github login
-    networks:
-      - intranet
   pixeleye-frontend:
     image: pixeleye/pixeleye-frontend:latest
     restart: unless-stopped
@@ -115,8 +103,6 @@ services:
       - CLIENT_ORY_URL=http://localhost:4433
       - NEXT_PUBLIC_BACKEND_URL=http://pixeleye-backend:5000
       # - NEXT_PUBLIC_GITHUB_APP_NAME= # optional if you want to use the github login
-    networks:
-      - intranet
     ports:
       - "3000:3000"
 
@@ -130,8 +116,6 @@ services:
         target: /etc/config/kratos
     command: -c /etc/config/kratos/kratos.yml migrate sql -e --yes
     restart: on-failure
-    networks:
-      - intranet
   kratos:
     depends_on:
       - kratos-migrate
@@ -148,11 +132,6 @@ services:
       - type: bind
         source: ./config
         target: /etc/config/kratos
-    networks:
-      - intranet
-networks:
-  intranet:
-    driver: bridge
 
 volumes:
   postgres-data:
