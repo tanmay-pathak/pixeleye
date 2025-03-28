@@ -4,16 +4,16 @@ dsn: memory
 
 serve:
   public:
-    base_url: http://localhost:4433/
+    base_url: https://pixeleye-kratos.zu.ca/
     cors:
       enabled: true
   admin:
-    base_url: http://kratos:4434/
+    base_url: https://pixeleye-kratos-admin.zu.ca/
 
 selfservice:
-  default_browser_return_url: http://localhost:3000/
+  default_browser_return_url: https://pixeleye-frontend.zu.ca/
   allowed_return_urls:
-    - http://localhost:3000
+    - https://pixeleye-frontend.zu.ca
 
   methods:
     password:
@@ -32,38 +32,38 @@ selfservice:
 
   flows:
     error:
-      ui_url: http://localhost:3000/auth-error
+      ui_url: https://pixeleye-frontend.zu.ca/auth-error
 
     settings:
-      ui_url: http://localhost:3000/settings/account
+      ui_url: https://pixeleye-frontend.zu.ca/settings/account
       privileged_session_max_age: 15m
       required_aal: highest_available
 
     recovery:
       enabled: true
-      ui_url: http://localhost:3000/recovery
+      ui_url: https://pixeleye-frontend.zu.ca/recovery
       use: code
 
     verification:
       enabled: true
-      ui_url: http://localhost:3000/verification
+      ui_url: https://pixeleye-frontend.zu.ca/verification
       use: code
       after:
-        default_browser_return_url: http://localhost:3000/dashboard
+        default_browser_return_url: https://pixeleye-frontend.zu.ca/dashboard
 
     logout:
       after:
-        default_browser_return_url: http://localhost:3000/login
+        default_browser_return_url: https://pixeleye-frontend.zu.ca/login
 
     login:
-      ui_url: http://localhost:3000/login
+      ui_url: https://pixeleye-frontend.zu.ca/login
       lifespan: 10m
       after:
-        default_browser_return_url: http://localhost:3000/dashboard
+        default_browser_return_url: https://pixeleye-frontend.zu.ca/dashboard
 
     registration:
       lifespan: 10m
-      ui_url: http://localhost:3000/registration
+      ui_url: https://pixeleye-frontend.zu.ca/registration
       after:
         password:
           hooks:

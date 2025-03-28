@@ -7,8 +7,6 @@ services:
       - "4437:4437"
   minio:
     image: docker.io/bitnami/minio:2024
-    ports:
-      - "9000:9000"
     volumes:
       - minio-data:/bitnami/minio/data
     environment:
@@ -22,24 +20,18 @@ services:
     restart: unless-stopped
     volumes:
       - postgres-data:/var/lib/postgresql/data
-
     environment:
       - POSTGRES_USER=guest
       - POSTGRES_PASSWORD=CHANGEME
       - POSTGRES_DB=guest
       - PGPORT=5431
       - POSTGRES_MULTIPLE_DATABASES=pixeleye,kratos
-    ports:
-      - "5431:5431"
   rabbitmq:
     image: rabbitmq:3.13
     restart: unless-stopped
     environment:
       - RABBITMQ_DEFAULT_USER=guest
       - RABBITMQ_DEFAULT_PASS=CHANGEME
-    ports:
-      - "5672:5672"
-      - "15672:15672"
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
   pixeleye-migrate:
@@ -53,16 +45,14 @@ services:
       - DB_PARAMS=sslmode=disable
     restart: on-failure
   pixeleye-backend:
-    ports:
-      - "5001:5000"
     depends_on:
       - pixeleye-migrate
     image: pixeleye/pixeleye:latest
     restart: unless-stopped
     environment:
       - STAGE_STATUS=prod
-      - BACKEND_URL=http://localhost:5000
-      - FRONTEND_URL=http://localhost:3000
+      - BACKEND_URL=https://pixeleye-backend.zu.ca
+      - FRONTEND_URL=https://pixeleye-frontend.zu.ca
       - DB_HOST=postgres
       - DB_PORT=5431
       - DB_NAME=pixeleye
@@ -74,7 +64,7 @@ services:
       - DB_MAX_LIFTTIME_CONNECTIONS=1
       - S3_BUCKET=pixeleye
       - S3_ENDPOINT=http://minio:9000
-      - S3_CLIENT_ENDPOINT=http://localhost:9000
+      - S3_CLIENT_ENDPOINT=https://pixeleye-minio.zu.ca
       - S3_ACCESS_KEY_ID=pixeleye
       - S3_KEY_SECRET=CHANGEME
       - ORY_URL=http://kratos:4433
@@ -100,11 +90,9 @@ services:
     restart: unless-stopped
     environment:
       - ORY_URL=http://kratos:4433
-      - CLIENT_ORY_URL=http://localhost:4433
+      - CLIENT_ORY_URL=https://pixeleye-kratos.zu.ca
       - NEXT_PUBLIC_BACKEND_URL=http://pixeleye-backend:5000
       # - NEXT_PUBLIC_GITHUB_APP_NAME= # optional if you want to use the github login
-    ports:
-      - "3000:3000"
 
   kratos-migrate:
     build:
@@ -119,9 +107,6 @@ services:
     build:
       context: ./config
       dockerfile: ./Dockerfile.kratos
-    ports:
-      - "4433:4433" # public
-      - "4434:4434" # admin
     restart: unless-stopped
     environment:
       - DSN=postgres://guest:CHANGEME@postgres:5431/kratos?sslmode=disable&max_conns=20&max_idle_conns=4
