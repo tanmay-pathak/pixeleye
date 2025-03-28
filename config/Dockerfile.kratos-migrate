@@ -1,0 +1,12 @@
+FROM oryd/kratos:v1.0.0
+
+# Copy the config files
+COPY ./kratos.yml /etc/config/kratos/
+COPY ./identity.schema.json /etc/config/kratos/
+COPY ./github.jsonnet /etc/config/kratos/
+
+# Set working directory
+WORKDIR /etc/config/kratos
+
+# Default command for migrations
+CMD ["-c", "/etc/config/kratos/kratos.yml", "migrate", "sql", "-e", "--yes"] 

@@ -107,19 +107,18 @@ services:
       - "3000:3000"
 
   kratos-migrate:
-    image: oryd/kratos:v1.0.0
+    build:
+      context: ./config
+      dockerfile: ./Dockerfile.kratos-migrate
     environment:
       - DSN=postgres://guest:CHANGEME@postgres:5431/kratos?sslmode=disable&max_conns=20&max_idle_conns=4
-    volumes:
-      - type: bind
-        source: ./config
-        target: /etc/config/kratos
-    command: -c /etc/config/kratos/kratos.yml migrate sql -e --yes
     restart: on-failure
   kratos:
     depends_on:
       - kratos-migrate
-    image: "oryd/kratos:v1.0.0"
+    build:
+      context: ./config
+      dockerfile: ./Dockerfile.kratos
     ports:
       - "4433:4433" # public
       - "4434:4434" # admin
@@ -127,11 +126,6 @@ services:
     environment:
       - DSN=postgres://guest:CHANGEME@postgres:5431/kratos?sslmode=disable&max_conns=20&max_idle_conns=4
       - LOG_LEVEL=trace
-    command: serve -c /etc/config/kratos/kratos.yml --watch-courier
-    volumes:
-      - type: bind
-        source: ./config
-        target: /etc/config/kratos
 
 volumes:
   postgres-data:
