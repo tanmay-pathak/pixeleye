@@ -89,7 +89,7 @@ services:
     image: pixeleye/pixeleye-frontend:latest
     restart: unless-stopped
     environment:
-      - ORY_URL=http://kratos:4433
+      - ORY_URL=https://pixeleye-kratos.zu.ca
       - CLIENT_ORY_URL=https://pixeleye-kratos.zu.ca
       - NEXT_PUBLIC_BACKEND_URL=http://pixeleye-backend:5000
       # - NEXT_PUBLIC_GITHUB_APP_NAME= # optional if you want to use the github login
